@@ -1,6 +1,11 @@
 package com.geiliweike.administrator.goodweather.util;
 import android.text.TextUtils;
+import android.util.Log;
+import android.view.accessibility.AccessibilityManager;
+import android.widget.Toast;
 
+import com.geiliweike.administrator.goodweather.LogUtil;
+import com.geiliweike.administrator.goodweather.MyApplication;
 import com.geiliweike.administrator.goodweather.db.City;
 import com.geiliweike.administrator.goodweather.db.County;
 import com.geiliweike.administrator.goodweather.db.Province;
@@ -28,6 +33,7 @@ public class Utility {
                         province.setProvinceCode(provinceObject.getInt("id"));
                         province.save();
                     }
+
                     return true;
                 }catch (JSONException e){
                     e.printStackTrace();
@@ -48,8 +54,11 @@ public class Utility {
                         City city = new City();
                         city.setCityName(cityObject.getString("name"));
                         city.setCityCode(cityObject.getInt("id"));
+                        city.setProvinceId(provinceId);
                         city.save();
                     }
+                    LogUtil.i("TAG","handlecityresponse()"+allCitis.getJSONObject(1));
+                    LogUtil.i("TAG","handlecityresponse()"+allCitis.getJSONObject(1).getString("name"));
                     return true;
                 }catch (JSONException e){
                     e.printStackTrace();
@@ -64,15 +73,16 @@ public class Utility {
         public static boolean handleCountyResponse(String response,int cityId){
             if (! TextUtils.isEmpty(response)){
                 try {
-                    JSONArray allCountis = new JSONArray(response);
-                    for (int i = 0; i < allCountis.length(); i++){
-                        JSONObject countyObject = allCountis.getJSONObject(i);
+                    JSONArray allCounties = new JSONArray(response);
+                    for (int i = 0; i < allCounties.length(); i++){
+                        JSONObject countyObject = allCounties.getJSONObject(i);
                         County county = new County();
                         county.setCountyName(countyObject.getString("name"));
                         county.setWeatherId(countyObject.getString("weather_id"));
                         county.setCityId(cityId);
                         county.save();
                     }
+                    LogUtil.i("TAG","handleCountyresponse()"+allCounties.getJSONObject(1));
                     return true;
                 }catch (JSONException e){
                     e.printStackTrace();
