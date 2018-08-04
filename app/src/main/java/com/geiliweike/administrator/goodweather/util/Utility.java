@@ -9,6 +9,8 @@ import com.geiliweike.administrator.goodweather.MyApplication;
 import com.geiliweike.administrator.goodweather.db.City;
 import com.geiliweike.administrator.goodweather.db.County;
 import com.geiliweike.administrator.goodweather.db.Province;
+import com.geiliweike.administrator.goodweather.gson.Weather;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -90,4 +92,23 @@ public class Utility {
             }
             return false;
         }
+
+    /**
+     * 将返回的JSON数据解析成WEATHER实体类
+     */
+    public static Weather handleWeatherResponse(String response){
+        try {
+            JSONObject jsonObject = new JSONObject(response);
+            LogUtil.i("TAG","Utility.handleWeatherResponse(response):"+jsonObject);
+            JSONArray jsonArray = jsonObject.getJSONArray("HeWeather");
+            LogUtil.i("TAG","WeatherActivity():jsonArray"+jsonArray);
+            String weatherContent = jsonArray.getJSONObject(0).toString();
+            LogUtil.i("TAG","WeatherActivity():weatherContent"+weatherContent);
+            return new Gson().fromJson(weatherContent,Weather.class);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
